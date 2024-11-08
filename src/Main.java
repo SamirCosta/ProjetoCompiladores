@@ -27,8 +27,6 @@ public class Main {
                 code.append(linha).append(System.lineSeparator());
             }
 
-            String textoCompleto = code.toString();
-//            System.out.println(textoCompleto);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
