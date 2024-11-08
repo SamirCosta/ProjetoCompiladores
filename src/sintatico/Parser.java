@@ -46,6 +46,7 @@ public class Parser {
 
     private void erro(String node) {
 //        node.addNode("ERROR: Expected: " + tipo + " Received: " + token.type);
+
         System.out.println("\nErro na regra: " + node);
         System.out.println("Token inválido: " + token.lexema);
         System.exit(0);
