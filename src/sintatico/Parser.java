@@ -453,7 +453,6 @@ public class Parser {
             token = getNextToken();
             return true;
         }
-//        node.addNode("ERROR: Expected: " + palavra + " Received: " + token.lexema);
         return false;
     }
 
@@ -464,7 +463,6 @@ public class Parser {
             token = getNextToken();
             return true;
         }
-//        node.addNode("ERROR: Expected: " + palavra + " Received: " + token.lexema);
         return false;
     }
 
@@ -474,7 +472,6 @@ public class Parser {
             token = getNextToken();
             return true;
         }
-//        node.addNode("ERROR: Expected: " + tipo + " Received: " + token.type);
         return false;
     }
 
@@ -485,7 +482,6 @@ public class Parser {
             token = getNextToken();
             return true;
         }
-//        node.addNode("ERROR: Expected: " + tipo + " Received: " + token.type);
         return false;
     }
 
