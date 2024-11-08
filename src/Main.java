@@ -27,8 +27,6 @@ public class Main {
                 code.append(linha).append(System.lineSeparator());
             }
 
-            String textoCompleto = code.toString();
-//            System.out.println(textoCompleto);
         } catch (IOException e) {
             e.printStackTrace();
         } finally {
@@ -45,10 +43,10 @@ public class Main {
         tokens = lexer.getTokens();
 
         System.out.println("Lista de tokens:");
-        System.out.println("\n\n");
         for (Token t : tokens) {
             System.out.println(t);
         }
+        System.out.println("\n\n");
 
         Parser parser = new Parser(tokens);
         Tree tree = parser.main();
