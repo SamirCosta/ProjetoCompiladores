@@ -34,5 +34,4 @@ BEGIN
         } else {
             print("O sistema está inativo.");
         }
-
 END
