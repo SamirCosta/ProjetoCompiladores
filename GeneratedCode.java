@@ -9,6 +9,7 @@ public class GeneratedCode {
 		float taxa;
 		boolean ativo;
 		contador= 0;
+		contador= 0;
 		taxa= 0;
 		ativo= true;
 		if(contador==0){
