@@ -11,13 +11,10 @@ public class JavaRunner {
     public static void run() {
 
         try {
-            // Salva o código em um arquivo .java
             saveJavaCodeToFile(javaCode.toString(), "GeneratedCode.java");
 
-            // Compila o arquivo .java
             compileJavaFile("GeneratedCode.java");
 
-            // Executa o código compilado
             executeJavaClass("GeneratedCode");
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
@@ -31,14 +28,12 @@ public class JavaRunner {
         writer.close();
     }
 
-    // Método para compilar o arquivo .java
     private static void compileJavaFile(String fileName) throws IOException, InterruptedException {
         ProcessBuilder processBuilder = new ProcessBuilder("javac", fileName);
         Process process = processBuilder.start();
         process.waitFor();
 
         if (process.exitValue() != 0) {
-            // Lê o erro de compilação, caso ocorra
             BufferedReader errorReader = new BufferedReader(new InputStreamReader(process.getErrorStream()));
             String line;
             while ((line = errorReader.readLine()) != null) {
@@ -49,7 +44,6 @@ public class JavaRunner {
     }
 
     private static void executeJavaClass(String className) throws IOException, InterruptedException {
-        // Configura o comando para abrir uma nova janela de terminal e executar a classe
         ProcessBuilder processBuilder;
 
         processBuilder = new ProcessBuilder("cmd", "/k", "start", "cmd", "/c", "java " + className);
