@@ -13,6 +13,7 @@ public class Lexer {
     private List<Token> tokens;
     private List<AFD> afds;
     private CharacterIterator code;
+    private int line;
 
     public Lexer() {
 
@@ -22,6 +23,7 @@ public class Lexer {
         tokens = new ArrayList<>();
         afds = new ArrayList<>();
         this.code = new StringCharacterIterator(code);
+        this.line = 1;
 
         afds.add(new Delimiters());
         afds.add(new Reserved());
@@ -43,6 +45,7 @@ public class Lexer {
                 code.current() == '\s' ||
                 code.current() == '\t'
         ) {
+            if (code.current() == '\n' ) this.line++;
             code.next();
         }
     }
@@ -59,6 +62,7 @@ public class Lexer {
                 Token token =  afd.evaluate(code);
                 if(token != null){
                     accepted = true;
+                    token.line = this.line;
                     tokens.add(token);
                     break;
                 }else{

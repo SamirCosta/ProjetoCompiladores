@@ -3,6 +3,7 @@ package utils;
 public class Token {
     public String type;
     public String lexema;
+    public int line;
 
     public Token() {
 

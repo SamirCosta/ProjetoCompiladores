@@ -43,10 +43,10 @@ public class Main {
         tokens = lexer.getTokens();
 
         System.out.println("Lista de tokens:");
-        System.out.println("\n\n");
         for (Token t : tokens) {
             System.out.println(t);
         }
+        System.out.println("\n\n");
 
         Parser parser = new Parser(tokens);
         Tree tree = parser.main();

@@ -1,6 +1,7 @@
 package sintatico;
 
 import enums.*;
+import semantico.Semantic;
 import utils.Token;
 import utils.Util;
 
@@ -12,6 +13,8 @@ public class Parser {
 
     List<Token> tokens;
     Token token;
+    int linhaAtual;
+    Semantic semantic;
 
     public Parser(List<Token> tokens) {
         this.tokens = tokens;
@@ -21,9 +24,12 @@ public class Parser {
         token = getNextToken();
         Node node = new Node("PROGRAMA");
         Tree tree = new Tree(node);
+        semantic = new Semantic();
+
         System.out.println("Programa traduzido para JAVA:\n");
         System.out.println("--------------------------------------------");
         traduz(Util.INICIO_JAVA);
+
         if (PROGRAMA(node)) {
             if (token.type.equals("EOF")) {
                 traduz(Util.FIM_JAVA);
@@ -45,15 +51,20 @@ public class Parser {
     }
 
     private void erro(String node) {
-//        node.addNode("ERROR: Expected: " + tipo + " Received: " + token.type);
+        System.out.println("\nERRO: " + node);
+        System.out.println("Token inválido: " + token.lexema + " na linha: " + token.line);
+        System.exit(0);
+    }
 
-        System.out.println("\nErro na regra: " + node);
-        System.out.println("Token inválido: " + token.lexema);
+    private void erroSemantico(String node, String id, String type) {
+        System.out.println("\n\n\nERRO: " + node);
+        System.out.println("Token inválido: " + id + " - Linha: " + token.line--);
         System.exit(0);
     }
 
     private boolean PROGRAMA(Node node) {
         if (matchL(ReservedWords.BEGIN.getWord(), node)) {
+            linhaAtual = token.line;
             if (BLOCO(node) && matchL(ReservedWords.END.getWord(), node)) {
                 return true;
             }
@@ -65,6 +76,7 @@ public class Parser {
     private boolean BLOCO(Node node) {
         Node nodeBloco = node.addNode("BLOCO");
 
+        traduz("\t\t");
         if (TIPO_COMANDO(nodeBloco) &&
                 BLOCO(nodeBloco)
         )
@@ -126,7 +138,8 @@ public class Parser {
         if ("COMMENT".equals(token.type)) {
             if (matchT("COMMENT", node, token.lexema)) {
                 return true;
-            }        }
+            }
+        }
 
         return false;
     }
@@ -134,9 +147,9 @@ public class Parser {
     private boolean ESCRITA(Node node) {
         Node nodeEscrita = node.addNode("ESCRITA");
 
-        if (matchL(ReservedWords.PRINT.getWord(), nodeEscrita, "System.out.print") &&
+        if (matchL(ReservedWords.PRINT.getWord(), nodeEscrita, "System.out.println") &&
                 EXP_PAREN(nodeEscrita) &&
-                matchL(DelimitersEnum.SEMICOLON.getDelimiter(), nodeEscrita, ";\n")) {
+                matchL(DelimitersEnum.SEMICOLON.getDelimiter(), nodeEscrita, ";")) {
             return true;
         }
         erro("ESCRITA");
@@ -159,12 +172,18 @@ public class Parser {
                                 matchL(DelimitersEnum.CLOSE_PAREN.getDelimiter(), nodeLeitura) &&
                                 matchL(DelimitersEnum.SEMICOLON.getDelimiter(), nodeLeitura)
                         ) {
-                            if (tipo.equals(ReservedWords.STRING.getWord()))
-                                traduz(String.format("String %s = scanner.nextLine();\n", id));
-                            if (tipo.equals(ReservedWords.INT.getWord()))
-                                traduz(String.format("int %s = scanner.nextInt();\n", id));
-                            if (tipo.equals(ReservedWords.FLOAT.getWord()))
-                                traduz(String.format("float %s = scanner.nextFloat();\n", id));
+                            if (tipo.equals(ReservedWords.STRING.getWord())) {
+                                semantic.addVariable(id, tipo);
+                                traduz(String.format("String %s = scanner.nextLine();", id));
+                            }
+                            if (tipo.equals(ReservedWords.INT.getWord())) {
+                                semantic.addVariable(id, tipo);
+                                traduz(String.format("int %s = scanner.nextInt();", id));
+                            }
+                            if (tipo.equals(ReservedWords.FLOAT.getWord())) {
+                                semantic.addVariable(id, tipo);
+                                traduz(String.format("float %s = scanner.nextFloat();", id));
+                            }
                             return true;
                         }
                     }
@@ -175,7 +194,7 @@ public class Parser {
         return false;
     }
 
-    private boolean ValidaTipoLeitura(){
+    private boolean ValidaTipoLeitura() {
         return "STRING".equals(token.type) || "INT".equals(token.type) || "FLOAT".equals(token.type);
     }
 
@@ -189,11 +208,16 @@ public class Parser {
 
     private boolean DECLARACAO(Node node) {
         Node nodeDeclaracao = node.addNode("DECLARACAO");
+        String id, type;
 
-        if (TIPO(nodeDeclaracao) &&
-                matchT("ID", nodeDeclaracao, token.lexema + " ") &&
-                matchL(DelimitersEnum.SEMICOLON.getDelimiter(), nodeDeclaracao, ";\n")) {
-            return true;
+        type = token.type;
+        if (TIPO(nodeDeclaracao)) {
+            id = token.lexema;
+            if (matchT("ID", nodeDeclaracao, token.lexema) &&
+                    matchL(DelimitersEnum.SEMICOLON.getDelimiter(), nodeDeclaracao, ";")) {
+                if (semantic.addVariable(id, type)) return true;
+                erroSemantico("Variável já foi declarada.", id, type);
+            }
         }
         erro("DECLARACAO");
         return false;
@@ -202,10 +226,10 @@ public class Parser {
     private boolean ATRIBUICAO(Node node) {
         Node nodeAtribuicao = node.addNode("ATRIBUICAO");
 
-        if (matchT("ID", nodeAtribuicao, token.lexema) &&
+        if (ID(nodeAtribuicao) &&
                 matchL(AttributionOperatorEnum.ATTRIBUTION.getOperator(), nodeAtribuicao, "= ") &&
                 EXPRESSAO(nodeAtribuicao) &&
-                matchL(DelimitersEnum.SEMICOLON.getDelimiter(), nodeAtribuicao, ";\n")) {
+                matchL(DelimitersEnum.SEMICOLON.getDelimiter(), nodeAtribuicao, ";")) {
             return true;
         }
         erro("ATRIBUICAO");
@@ -217,9 +241,9 @@ public class Parser {
         if (matchL(ReservedWords.IF.getWord(), nodeCondicional, "if") &&
                 matchL(DelimitersEnum.OPEN_PAREN.getDelimiter(), nodeCondicional, "(") &&
                 CONDICAO(nodeCondicional) &&
-                matchL(DelimitersEnum.CLOSE_PAREN.getDelimiter(), nodeCondicional, ")")) {
-            if (matchL(DelimitersEnum.OPEN_BRACE.getDelimiter(), nodeCondicional, "{\n") &&
-                    BLOCO(nodeCondicional) &&
+                matchL(DelimitersEnum.CLOSE_PAREN.getDelimiter(), nodeCondicional, ")") &&
+                matchL(DelimitersEnum.OPEN_BRACE.getDelimiter(), nodeCondicional, "{")) {
+            if (BLOCO(nodeCondicional) &&
                     matchL(DelimitersEnum.CLOSE_BRACE.getDelimiter(), nodeCondicional, "}")) {
                 ELSE(nodeCondicional);
                 return true;
@@ -231,9 +255,9 @@ public class Parser {
 
     private boolean ELSE(Node node) {
         Node nodeElse = node.addNode("ELSE");
-        if (matchL(ReservedWords.ELSE.getWord(), nodeElse, "else")) {
-            if (matchL(DelimitersEnum.OPEN_BRACE.getDelimiter(), nodeElse, "{\n") &&
-                    BLOCO(nodeElse) &&
+        if (matchL(ReservedWords.ELSE.getWord(), nodeElse, "else") &&
+                matchL(DelimitersEnum.OPEN_BRACE.getDelimiter(), nodeElse, "{")) {
+            if (BLOCO(nodeElse) &&
                     matchL(DelimitersEnum.CLOSE_BRACE.getDelimiter(), nodeElse, "}")) {
                 return true;
             }
@@ -247,7 +271,7 @@ public class Parser {
                 matchL(DelimitersEnum.OPEN_PAREN.getDelimiter(), nodeEnquanto, "(") &&
                 CONDICAO(nodeEnquanto) &&
                 matchL(DelimitersEnum.CLOSE_PAREN.getDelimiter(), nodeEnquanto, ")")) {
-            if (matchL(DelimitersEnum.OPEN_BRACE.getDelimiter(), nodeEnquanto, "{\n") &&
+            if (matchL(DelimitersEnum.OPEN_BRACE.getDelimiter(), nodeEnquanto, "{") &&
                     BLOCO(nodeEnquanto) &&
                     matchL(DelimitersEnum.CLOSE_BRACE.getDelimiter(), nodeEnquanto, "}")) {
                 return true;
@@ -267,7 +291,7 @@ public class Parser {
                 INCREMENTO(nodePara) &&
                 matchL(DelimitersEnum.CLOSE_PAREN.getDelimiter(), nodePara, ")") &&
                 BLOCO(nodePara)) {
-            if (matchL(DelimitersEnum.OPEN_BRACE.getDelimiter(), nodePara, "{\n") &&
+            if (matchL(DelimitersEnum.OPEN_BRACE.getDelimiter(), nodePara, "{") &&
                     BLOCO(nodePara) &&
                     matchL(DelimitersEnum.CLOSE_BRACE.getDelimiter(), nodePara, "}")) {
                 return true;
@@ -280,9 +304,9 @@ public class Parser {
     private boolean INCREMENTO(Node node) {
         Node nodeIncremento = node.addNode("INCREMENTO");
 
-        if (matchT("ID", nodeIncremento, token.lexema) &&
+        if (ID(nodeIncremento) &&
                 matchL(AttributionOperatorEnum.ATTRIBUTION.getOperator(), nodeIncremento, "=") &&
-                matchT("ID", nodeIncremento, token.lexema) &&
+                ID(nodeIncremento) &&
                 SOMA_SUB(nodeIncremento) &&
                 EXPRESSAO(nodeIncremento)) {
             return true;
@@ -349,7 +373,7 @@ public class Parser {
         Node nodeFator = node.addNode("FATOR");
         if (EXP_PAREN(nodeFator) ||
                 LITERAL(nodeFator) ||
-                matchT("ID", nodeFator, token.lexema)
+                ID(nodeFator)
         ) {
             return true;
         }
@@ -411,6 +435,18 @@ public class Parser {
                 matchL(ConditionOperatorEnum.MINOR.getOperator(), nodeOpComparador, "<");
     }
 
+    private boolean ID(Node node) {
+        Node nodeID = node.addNode("ID");
+
+        if (semantic.isDeclared(token.lexema)) {
+            if (matchT("ID", nodeID, token.lexema)) {
+                return true;
+            }
+        } else erro("Variável não declarada");
+
+        return false;
+    }
+
     private boolean matchL(String palavra, Node node) {
         if (token.lexema.equals(palavra)) {
             node.addNode(token.lexema);
@@ -454,6 +490,10 @@ public class Parser {
     }
 
     public void traduz(String code) {
+        if (token.line != linhaAtual) {
+            code = "\n" + code;
+            linhaAtual = token.line;
+        }
         System.out.print(code);
         javaCode.append(code);
     }
