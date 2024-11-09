@@ -238,6 +238,7 @@ public class Parser {
 
     private boolean CONDICIONAL(Node node) {
         Node nodeCondicional = node.addNode("CONDICIONAL");
+
         if (matchL(ReservedWords.IF.getWord(), nodeCondicional, "if") &&
                 matchL(DelimitersEnum.OPEN_PAREN.getDelimiter(), nodeCondicional, "(") &&
                 CONDICAO(nodeCondicional) &&
@@ -289,8 +290,7 @@ public class Parser {
                 CONDICAO(nodePara) &&
                 matchL(DelimitersEnum.SEMICOLON.getDelimiter(), nodePara, ";") &&
                 INCREMENTO(nodePara) &&
-                matchL(DelimitersEnum.CLOSE_PAREN.getDelimiter(), nodePara, ")") &&
-                BLOCO(nodePara)) {
+                matchL(DelimitersEnum.CLOSE_PAREN.getDelimiter(), nodePara, ")")) {
             if (matchL(DelimitersEnum.OPEN_BRACE.getDelimiter(), nodePara, "{") &&
                     BLOCO(nodePara) &&
                     matchL(DelimitersEnum.CLOSE_BRACE.getDelimiter(), nodePara, "}")) {
@@ -420,7 +420,7 @@ public class Parser {
 
         return matchL(ReservedWords.STRING.getWord(), nodeTipo, "String ") ||
                 matchL(ReservedWords.INT.getWord(), nodeTipo, "int ") ||
-                matchL(ReservedWords.FLOAT.getWord(), nodeTipo, "float ") ||
+                matchL(ReservedWords.FLOAT.getWord(), nodeTipo, "double ") ||
                 matchL(ReservedWords.BOOLEAN.getWord(), nodeTipo, "boolean ");
     }
 

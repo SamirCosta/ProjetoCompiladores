@@ -50,7 +50,7 @@ public class Main {
 
         Parser parser = new Parser(tokens);
         Tree tree = parser.main();
-//        tree.printTree();
+        tree.printTree();
 
         JavaRunner.run();
 

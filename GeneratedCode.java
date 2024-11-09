@@ -6,8 +6,10 @@ public class GeneratedCode {
         Scanner scanner = new Scanner(System.in);
 		int contador;
 		String mensagem;
-		float taxa;
+		double taxa;
 		boolean ativo;
+		taxa= 2.1+56*10;
+		System.out.println(taxa);
 		contador= 0;
 		taxa= 0;
 		ativo= true;
@@ -15,6 +17,8 @@ public class GeneratedCode {
 		if(taxa==0){
 		System.out.println("FOI");
 		}
+		taxa= 214.4351;
+		System.out.println(taxa);
 		mensagem= "Contador inicializado";
 		System.out.println(mensagem);
 		}else{
@@ -26,7 +30,7 @@ public class GeneratedCode {
 		contador= contador+1;
 		}
 		int i;
-		for(i= 0;i<5;i=i+2)		{
+		for(i= 0;i<5;i=i+2){
 		System.out.println("Iteração do loop for: "+i);
 		}
 		

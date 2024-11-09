@@ -1,9 +1,11 @@
 BEGIN
-
         int contador;
         string mensagem;
         float taxa;
         boolean ativo;
+
+        taxa = 2.1 + 56 * 10;
+        printdgb(taxa);
 
         contador = 0;
         taxa = 0;
@@ -12,6 +14,8 @@ BEGIN
             if(taxa == 0){
                 print("FOI");
             }
+            taxa = 214.4351;
+            print(taxa);
             mensagem = "Contador inicializado";
             print(mensagem);
         } else {
