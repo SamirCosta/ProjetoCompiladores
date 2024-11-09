@@ -3,7 +3,8 @@ package utils;
 import java.text.CharacterIterator;
 
 public class Util {
-
+    public static final String VERMELHO = "\u001B[31m";
+    public static final String RESET = "\u001B[0m";
     public static final String INICIO_JAVA = """
             import java.util.Scanner;
             

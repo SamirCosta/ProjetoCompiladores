@@ -9,10 +9,12 @@ public class GeneratedCode {
 		float taxa;
 		boolean ativo;
 		contador= 0;
-		contador= 0;
 		taxa= 0;
 		ativo= true;
 		if(contador==0){
+		if(taxa==0){
+		System.out.println("FOI");
+		}
 		mensagem= "Contador inicializado";
 		System.out.println(mensagem);
 		}else{
@@ -24,7 +26,7 @@ public class GeneratedCode {
 		contador= contador+1;
 		}
 		int i;
-		for(i= 0;i<5;i=i+1)		{
+		for(i= 0;i<5;i=i+2)		{
 		System.out.println("Iteração do loop for: "+i);
 		}
 		

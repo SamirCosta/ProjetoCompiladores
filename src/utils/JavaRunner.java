@@ -15,7 +15,7 @@ public class JavaRunner {
 
             compileJavaFile("GeneratedCode.java");
 
-//            executeJavaClass("GeneratedCode");
+            executeJavaClass("GeneratedCode");
         } catch (IOException | InterruptedException e) {
             e.printStackTrace();
         }

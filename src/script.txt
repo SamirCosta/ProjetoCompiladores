@@ -6,10 +6,12 @@ BEGIN
         boolean ativo;
 
         contador = 0;
-        contador = 0;
         taxa = 0;
         ativo = true;
         if (contador == 0) {
+            if(taxa == 0){
+                print("FOI");
+            }
             mensagem = "Contador inicializado";
             print(mensagem);
         } else {
@@ -23,7 +25,7 @@ BEGIN
         }
 
         int i;
-        for (i = 0; i < 5; i = i + 1) {
+        for (i = 0; i < 5; i = i + 2) {
             print("Iteração do loop for: " + i);
         }
 

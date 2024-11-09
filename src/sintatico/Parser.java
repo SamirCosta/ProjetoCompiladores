@@ -15,6 +15,7 @@ public class Parser {
     Token token;
     int linhaAtual;
     Semantic semantic;
+    String errorMessage;
 
     public Parser(List<Token> tokens) {
         this.tokens = tokens;
@@ -51,14 +52,14 @@ public class Parser {
     }
 
     private void erro(String node) {
-        System.out.println("\nERRO: " + node);
-        System.out.println("Token inválido: " + token.lexema + " na linha: " + token.line);
+        System.out.println(Util.VERMELHO + "\n\n\nERRO: " + node);
+        System.out.println(errorMessage + Util.RESET);
         System.exit(0);
     }
 
     private void erroSemantico(String node, String id, String type) {
-        System.out.println("\n\n\nERRO: " + node);
-        System.out.println("Token inválido: " + id + " - Linha: " + token.line--);
+        System.out.println(Util.VERMELHO + "\n\n\nERROR: " + node);
+        System.out.println("Token inválido: " + id + " - Linha: " + token.line-- + Util.RESET);
         System.exit(0);
     }
 
@@ -87,7 +88,6 @@ public class Parser {
     }
 
     private boolean TIPO_COMANDO(Node node) {
-//        Node nodeTipoComando = node.addNode("TIPO_COMANDO");
 
         if ("STRING".equals(token.type) ||
                 "INT".equals(token.type) ||
@@ -437,12 +437,13 @@ public class Parser {
 
     private boolean ID(Node node) {
         Node nodeID = node.addNode("ID");
+        String id = token.lexema;
 
-        if (semantic.isDeclared(token.lexema)) {
-            if (matchT("ID", nodeID, token.lexema)) {
+        if (matchT("ID", nodeID, token.lexema)) {
+            if (semantic.isDeclared(id)) {
                 return true;
-            }
-        } else erro("Variável não declarada");
+            } else erroSemantico("Variável não declarada", id, token.type);
+        }
 
         return false;
     }
@@ -453,6 +454,7 @@ public class Parser {
             token = getNextToken();
             return true;
         }
+        errorMessage = String.format("Expected: '%s' - Received: '%s' - Linha %d", palavra, token.lexema, token.line);
         return false;
     }
 
@@ -463,6 +465,7 @@ public class Parser {
             token = getNextToken();
             return true;
         }
+        errorMessage = String.format("Expected: '%s' - Received: '%s' - Linha %d", palavra, token.lexema, token.line);
         return false;
     }
 
@@ -472,6 +475,7 @@ public class Parser {
             token = getNextToken();
             return true;
         }
+        errorMessage = String.format("Expected: %s - Received: '%s' - Linha %d", tipo, token.lexema, token.line);
         return false;
     }
 
@@ -482,6 +486,7 @@ public class Parser {
             token = getNextToken();
             return true;
         }
+        errorMessage = String.format("Expected: %s Received: '%s' Linha %d", tipo, token.lexema, token.line);
         return false;
     }
 

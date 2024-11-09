@@ -3,7 +3,7 @@ package semantico;
 import java.util.HashMap;
 
 public class Semantic {
-    public HashMap<String, String> variables = new HashMap<>();
+    private final HashMap<String, String> variables = new HashMap<>();
 
     public boolean addVariable(String id, String type) {
         if (isDeclared(id)) return false;
@@ -14,6 +14,5 @@ public class Semantic {
     public boolean isDeclared(String id) {
         return variables.containsKey(id);
     }
-
 
 }
