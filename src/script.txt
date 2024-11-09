@@ -1,46 +1,46 @@
-BEGIN
-        int contador;
-        string mensagem;
-        float taxa;
-        boolean ativo;
+nachinat
+        tseloye contador;
+        stroka mensagem;
+        plavat taxa;
+        bulev ativo;
 
         taxa = 2.1 + 56 * 10;
-        printdgb(taxa);
+        pechat(taxa);
 
         contador = 0;
         taxa = 0;
-        ativo = true;
-        if (contador == 0) {
-            if(taxa == 0){
-                print("FOI");
+        ativo = vernyy;
+        yesli (contador == 0) {
+            yesli(taxa == 0){
+                pechat("FOI");
             }
             taxa = 214.4351;
-            print(taxa);
+            pechat(taxa);
             mensagem = "Contador inicializado";
-            print(mensagem);
-        } else {
+            pechat(mensagem);
+        } inache {
             mensagem = "Contador já possui valor";
-            print(mensagem);
+            pechat(mensagem);
         }
 
-        while (contador < 10) {
-            print("Contagem: " + contador);
+        poka (contador < 10) {
+            pechat("Contagem: " + contador);
             contador = contador + 1;
         }
 
-        int i;
-        for (i = 0; i < 5; i = i + 2) {
-            print("Iteração do loop for: " + i);
+        tseloye i;
+        dlya (i = 0; i < 5; i = i + 2) {
+            pechat("Iteração do loop for: " + i);
         }
 
-        scan(int cont);
-        scan(string mens);
-        scan(float tax);
+        skanivorovat(tseloye cont);
+        skanivorovat(stroka mens);
+        skanivorovat(plavat tax);
 
-        if (ativo == true) {
-            print("O sistema está ativo.");
-        } else {
-            print("O sistema está inativo.");
+        yesli (ativo == vernyy) {
+            pechat("O sistema está ativo.");
+        } inache {
+            pechat("O sistema está inativo.");
         }
 
-END
+konets

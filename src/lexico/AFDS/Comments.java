@@ -22,7 +22,7 @@ public class Comments extends AFD {
         code.next();
 
         while (code.current() != CharacterIterator.DONE && code.current() != '\n') {
-            if (code.current() != '\r') {
+            if (code.current() == '\r') {
                 code.next();
                 continue;
             }

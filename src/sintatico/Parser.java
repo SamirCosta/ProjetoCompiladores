@@ -52,6 +52,7 @@ public class Parser {
     }
 
     private void erro(String node) {
+        if(errorMessage == null) errorMessage = "Token inválido: " + token.lexema + " - Linha: " + token.line--;
         System.out.println(Util.VERMELHO + "\n\n\nERRO: " + node);
         System.out.println(errorMessage + Util.RESET);
         System.exit(0);
@@ -163,7 +164,7 @@ public class Parser {
         String tipo;
         if (matchL(ReservedWords.SCAN.getWord(), nodeLeitura) &&
                 matchL(DelimitersEnum.OPEN_PAREN.getDelimiter(), nodeLeitura)) {
-            if (ValidaTipoLeitura()) {
+//            if (ValidaTipoLeitura()) {
                 tipo = token.lexema;
                 if (TIPO_LEITURA(nodeLeitura)) {
                     if ("ID".equals(token.type)) {
@@ -188,7 +189,7 @@ public class Parser {
                         }
                     }
                 }
-            }
+//            }
         }
         erro("LEITURA");
         return false;
