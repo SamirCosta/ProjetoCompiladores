@@ -1,7 +1,46 @@
 nachinat
-        tseloye x;
-        x = 0;
-        yesli(x == 0){
-            pechat(x + 5);
+        tseloye contador;
+        stroka mensagem;
+        plavat taxa;
+        bulev ativo;
+
+        taxa = 2.1 + 56 * 10;
+        pechat(taxa);
+
+        contador = 0;
+        taxa = 0;
+        ativo = vernyy;
+        yesli (contador == 0) {
+            yesli(taxa == 0){
+                pechat("FOI");
+            }
+            taxa = 214.4351;
+            pechat(taxa);
+            mensagem = "Contador inicializado";
+            pechat(mensagem);
+        } inache {
+            mensagem = "Contador já possui valor";
+            pechat(mensagem);
         }
+
+        poka (contador < 10) {
+            pechat("Contagem: " + contador);
+            contador = contador + 1;
+        }
+
+        tseloye i;
+        dlya (i = 0; i < 5; i = i + 2) {
+            pechat("Iteração do loop for: " + i);
+        }
+
+        //skanivorovat(tseloye cont);
+        skanivorovat(stroka mens);
+        //skanivorovat(plavat tax);
+
+        yesli (ativo == vernyy) {
+            pechat("O sistema está ativo.");
+        } inache {
+            pechat("O sistema está inativo.");
+        }
+
 konets
