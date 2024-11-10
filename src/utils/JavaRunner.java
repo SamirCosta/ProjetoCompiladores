@@ -4,6 +4,8 @@ import java.io.BufferedReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 public class JavaRunner {
     public static StringBuilder javaCode = new StringBuilder();
@@ -44,10 +46,9 @@ public class JavaRunner {
     }
 
     private static void executeJavaClass(String className) throws IOException, InterruptedException {
-        ProcessBuilder processBuilder;
-
-        processBuilder = new ProcessBuilder("cmd", "/k", "start", "cmd", "/c", "java " + className);
-
-        processBuilder.start();
+        String scriptContent = "java " + className + " & pause";
+        Path tempScript = Files.createTempFile("runScript", ".bat");
+        Files.writeString(tempScript, scriptContent);
+        new ProcessBuilder("cmd", "/c", "start", tempScript.toAbsolutePath().toString()).start();
     }
 }
