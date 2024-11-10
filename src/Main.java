@@ -15,7 +15,7 @@ public class Main {
 
     public static void main(String[] args) {
         List<Token> tokens;
-        String caminhoArquivo = "C:/Users/samir/Desktop/ProjetoCompiladores/src/script.txt";
+        String caminhoArquivo = "src/script.txt";
         StringBuilder code = new StringBuilder();
         BufferedReader leitor = null;
 
