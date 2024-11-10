@@ -7,7 +7,7 @@ public class GeneratedCode {
 		int x;
 		x= 0;
 		if(x==0){
-		System.out.println(x);
+		System.out.println(x+5);
 		}
 		
     

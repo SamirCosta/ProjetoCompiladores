@@ -52,15 +52,15 @@ public class Parser {
     }
 
     private void erro(String node) {
-        if(errorMessage == null) errorMessage = "Token inválido: " + token.lexema + " - Linha: " + token.line--;
-        System.out.println(Util.VERMELHO + "\n\n\nERRO: " + node);
+        if(errorMessage == null) errorMessage = "Invalid token: " + token.lexema + " - Line: " + token.line--;
+        System.out.println(Util.VERMELHO + "\n\n\nERROR: " + node);
         System.out.println(errorMessage + Util.RESET);
         System.exit(0);
     }
 
     private void erroSemantico(String node, String id, String type) {
         System.out.println(Util.VERMELHO + "\n\n\nERROR: " + node);
-        System.out.println("Token inválido: " + id + " - Linha: " + token.line-- + Util.RESET);
+        System.out.println("Invalid token: " + id + " - Line: " + token.line-- + Util.RESET);
         System.exit(0);
     }
 
@@ -71,6 +71,7 @@ public class Parser {
                 return true;
             }
         }
+        errorMessage = String.format("Syntax error.");
         erro("PROGRAMA");
         return false;
     }
@@ -164,7 +165,6 @@ public class Parser {
         String tipo;
         if (matchL(ReservedWords.SCAN.getWord(), nodeLeitura) &&
                 matchL(DelimitersEnum.OPEN_PAREN.getDelimiter(), nodeLeitura)) {
-//            if (ValidaTipoLeitura()) {
                 tipo = token.lexema;
                 if (TIPO_LEITURA(nodeLeitura)) {
                     if ("ID".equals(token.type)) {
@@ -189,14 +189,9 @@ public class Parser {
                         }
                     }
                 }
-//            }
         }
         erro("LEITURA");
         return false;
-    }
-
-    private boolean ValidaTipoLeitura() {
-        return "STRING".equals(token.type) || "INT".equals(token.type) || "FLOAT".equals(token.type);
     }
 
     private boolean TIPO_LEITURA(Node node) {
@@ -419,21 +414,29 @@ public class Parser {
     private boolean TIPO(Node node) {
         Node nodeTipo = node.addNode("TIPO");
 
-        return matchL(ReservedWords.STRING.getWord(), nodeTipo, "String ") ||
+        if (matchL(ReservedWords.STRING.getWord(), nodeTipo, "String ") ||
                 matchL(ReservedWords.INT.getWord(), nodeTipo, "int ") ||
                 matchL(ReservedWords.FLOAT.getWord(), nodeTipo, "double ") ||
-                matchL(ReservedWords.BOOLEAN.getWord(), nodeTipo, "boolean ");
+                matchL(ReservedWords.BOOLEAN.getWord(), nodeTipo, "boolean ")){
+            return true;
+        }
+        errorMessage = String.format("Expected: Type. Received: '%s' Line: %d", token.lexema, token.line);
+        return false;
     }
 
     private boolean OP_COMPARADOR(Node node) {
         Node nodeOpComparador = node.addNode("OP_COMPARADOR");
 
-        return matchL(ConditionOperatorEnum.IS_EQUAL.getOperator(), nodeOpComparador, "==") ||
+        if (matchL(ConditionOperatorEnum.IS_EQUAL.getOperator(), nodeOpComparador, "==") ||
                 matchL(ConditionOperatorEnum.IS_DIFFERENT.getOperator(), nodeOpComparador, "!=") ||
                 matchL(ConditionOperatorEnum.GREATER_EQUAL.getOperator(), nodeOpComparador, ">=") ||
                 matchL(ConditionOperatorEnum.MINOR_EQUAL.getOperator(), nodeOpComparador, "<=") ||
                 matchL(ConditionOperatorEnum.GREATER.getOperator(), nodeOpComparador, ">") ||
-                matchL(ConditionOperatorEnum.MINOR.getOperator(), nodeOpComparador, "<");
+                matchL(ConditionOperatorEnum.MINOR.getOperator(), nodeOpComparador, "<")){
+            return true;
+        }
+        errorMessage = String.format("Expected: Condition Operator. Received: '%s' Line: %d", token.lexema, token.line);
+        return false;
     }
 
     private boolean ID(Node node) {
@@ -455,7 +458,7 @@ public class Parser {
             token = getNextToken();
             return true;
         }
-        errorMessage = String.format("Expected: '%s' - Received: '%s' - Linha %d", palavra, token.lexema, token.line);
+        errorMessage = String.format("Expected: '%s' Received: '%s' Line: %d", palavra, token.lexema, token.line);
         return false;
     }
 
@@ -466,7 +469,7 @@ public class Parser {
             token = getNextToken();
             return true;
         }
-        errorMessage = String.format("Expected: '%s' - Received: '%s' - Linha %d", palavra, token.lexema, token.line);
+        errorMessage = String.format("Expected: '%s' Received: '%s' Line: %d", palavra, token.lexema, token.line);
         return false;
     }
 
@@ -476,7 +479,7 @@ public class Parser {
             token = getNextToken();
             return true;
         }
-        errorMessage = String.format("Expected: %s - Received: '%s' - Linha %d", tipo, token.lexema, token.line);
+        errorMessage = String.format("Expected: %s Received: '%s' Line: %d", tipo, token.lexema, token.line);
         return false;
     }
 
@@ -487,7 +490,7 @@ public class Parser {
             token = getNextToken();
             return true;
         }
-        errorMessage = String.format("Expected: %s Received: '%s' Linha %d", tipo, token.lexema, token.line);
+        errorMessage = String.format("Expected: %s Received: '%s' Line: %d", tipo, token.lexema, token.line);
         return false;
     }
 

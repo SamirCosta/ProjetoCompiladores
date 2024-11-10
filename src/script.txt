@@ -2,6 +2,6 @@ nachinat
         tseloye x;
         x = 0;
         yesli(x == 0){
-            pechat(x);
+            pechat(x + 5);
         }
 konets
