@@ -1,9 +1,6 @@
 package lexico.AFDS;
 
-import enums.AttributionOperatorEnum;
-import enums.ConditionOperatorEnum;
-import enums.DelimitersEnum;
-import enums.MathOperatorEnum;
+import enums.*;
 import lexico.AFD;
 import utils.Token;
 import java.text.CharacterIterator;
@@ -39,6 +36,7 @@ public class ID extends AFD {
                 AttributionOperatorEnum.contains(String.valueOf(code.current())) ||
                 ConditionOperatorEnum.contains(String.valueOf(code.current())) ||
                 MathOperatorEnum.contains(String.valueOf(code.current())) ||
+                LogicOperatorEnum.contains(String.valueOf(code.current())) ||
                 code.current() == CharacterIterator.DONE ||
                 code.current() == '\r' ||
                 code.current() == '\t' ||

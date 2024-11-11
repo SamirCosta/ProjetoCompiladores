@@ -1,6 +1,5 @@
 package lexico.AFDS;
 
-import enums.DelimitersEnum;
 import lexico.AFD;
 import utils.Token;
 
